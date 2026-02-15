@@ -26,7 +26,19 @@ $router->map('GET', '/logout', 'AuthController#logout', 'logout');
 // Dashboard
 $router->map('GET', '/', 'DashboardController#index', 'dashboard');
 $router->map('GET', '/settings', 'DashboardController#settings', 'settings');
-$router->map('POST', '/domain/save', 'DashboardController#saveDomain', 'save_domain');
+$router->map('POST', '/settings/save', 'DashboardController#saveSettings', 'save_settings');
+
+// Tools
+$router->map('GET', '/tools', 'ToolController#index', 'tool_list');
+$router->map('GET', '/tools/create', 'ToolController#create', 'tool_create');
+$router->map('POST', '/tools', 'ToolController#store', 'tool_store');
+$router->map('GET', '/tools/edit/[i:id]', 'ToolController#edit', 'tool_edit');
+$router->map('POST', '/tools/update/[i:id]', 'ToolController#update', 'tool_update');
+$router->map('POST', '/tools/delete/[i:id]', 'ToolController#delete', 'tool_delete');
+
+// Public Tool Routes
+$router->map('GET', '/tool/[*:slug]', 'ToolController#show', 'tool_show');
+$router->map('POST', '/tool/process/[i:id]', 'ToolController#process', 'tool_process');
 
 // Match request
 $match = $router->match();

@@ -5,19 +5,20 @@ class Database {
     private $pdo;
 
     private function __construct() {
-        // In a real environment, use environment variables
-        // For this sandbox, we'll default to localhost if not set, or a sqlite file for fallback testing
+        // Use environment variables if set, otherwise fallback to the user's specific credentials
+        // or SQLite for local development if configured.
 
         $host = getenv('DB_HOST') ?: 'localhost';
-        $db   = getenv('DB_NAME') ?: 'u118256295_stg_trustabee';
-        $user = getenv('DB_USER') ?: 'u118256295_trustabee';
-        $pass = getenv('DB_PASS') ?: 'Trustabee123!';
+        $db   = getenv('DB_NAME') ?: 'u118256295_aitools';
+        $user = getenv('DB_USER') ?: 'u118256295_aitools';
+        $pass = getenv('DB_PASS') ?: 'AITools123!';
         $driver = getenv('DB_DRIVER') ?: 'mysql';
 
         try {
             if ($driver === 'sqlite') {
                 // For sandbox testing without MySQL
-                $this->pdo = new PDO("sqlite:" . __DIR__ . "/../database/trustabee.sqlite");
+                $dbPath = __DIR__ . "/../database/trustabee.sqlite";
+                $this->pdo = new PDO("sqlite:" . $dbPath);
             } else {
                 $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
                 $this->pdo = new PDO($dsn, $user, $pass);
@@ -27,8 +28,9 @@ class Database {
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
-            // In production, log this, don't echo
-            die("Database connection failed: " . $e->getMessage());
+            // In production, log this, don't echo detailed errors to the user
+            // But for debugging connection issues, it might be helpful initially.
+            die("Database connection failed. Please check your configuration.");
         }
     }
 
