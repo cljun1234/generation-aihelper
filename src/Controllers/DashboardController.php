@@ -10,12 +10,18 @@ class DashboardController {
         $pdo = Database::getInstance();
         $user_id = $_SESSION['user_id'];
 
-        // Fetch configured domain (existing logic kept for compatibility)
-        $stmt = $pdo->prepare("SELECT * FROM domains WHERE user_id = ? LIMIT 1");
+        // Fetch Tools for the Dashboard
+        $stmt = $pdo->prepare("SELECT * FROM ai_tools WHERE user_id = ? ORDER BY created_at DESC");
         $stmt->execute([$user_id]);
-        $domain = $stmt->fetch();
+        $tools = $stmt->fetchAll();
 
-        require_once __DIR__ . '/../../views/pages/home.php';
+        // Fetch configured domain (optional, keep if needed for other views)
+        $stmtDomain = $pdo->prepare("SELECT * FROM domains WHERE user_id = ? LIMIT 1");
+        $stmtDomain->execute([$user_id]);
+        $domain = $stmtDomain->fetch();
+
+        // Use the Tool Index view as the Dashboard
+        require_once __DIR__ . '/../../views/tools/index.php';
     }
 
     public function settings() {
@@ -44,6 +50,8 @@ class DashboardController {
             header('Location: /login');
             exit;
         }
+
+        CSRF::check();
 
         $pdo = Database::getInstance();
         $user_id = $_SESSION['user_id'];

@@ -32,6 +32,7 @@ class ToolController {
 
     public function store() {
         $this->ensureAuth();
+        CSRF::check();
         $title = $_POST['title'];
         $slug = $_POST['slug'];
         $model_provider = $_POST['model_provider'];
@@ -108,6 +109,7 @@ class ToolController {
 
     public function update($id) {
         $this->ensureAuth();
+        CSRF::check();
         $title = $_POST['title'];
         $slug = $_POST['slug'];
         $model_provider = $_POST['model_provider'];
@@ -158,6 +160,7 @@ class ToolController {
 
     public function delete($id) {
         $this->ensureAuth();
+        CSRF::check();
         $stmt = $this->pdo->prepare("DELETE FROM ai_tools WHERE id = ? AND user_id = ?");
         $stmt->execute([$id, $_SESSION['user_id']]);
         header('Location: /tools');
@@ -191,6 +194,12 @@ class ToolController {
 
     public function process($id) {
         header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *'); // Allow embedding
+
+        // Note: Strict CSRF check is disabled here to support embedding in iframes (e.g. GHL)
+        // where third-party cookies/sessions might be blocked.
+        // Since this action (Generate Text) does not modify user account state,
+        // the risk is primarily resource usage (API costs), which should be handled via Rate Limiting in future.
 
         // Fetch tool and fields
         $stmt = $this->pdo->prepare("SELECT * FROM ai_tools WHERE id = ?");

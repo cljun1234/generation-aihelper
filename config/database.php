@@ -8,10 +8,10 @@ class Database {
         // Use environment variables if set, otherwise fallback to the user's specific credentials
         // or SQLite for local development if configured.
 
-        $host = getenv('DB_HOST') ?: 'localhost';
-        $db   = getenv('DB_NAME') ?: 'u118256295_aitools';
-        $user = getenv('DB_USER') ?: 'u118256295_aitools';
-        $pass = getenv('DB_PASS') ?: 'AITools123!';
+        $host = getenv('DB_HOST') ?: '127.0.0.1';
+        $db   = getenv('DB_NAME') ?: '';
+        $user = getenv('DB_USER') ?: '';
+        $pass = getenv('DB_PASS') ?: '';
         $driver = getenv('DB_DRIVER') ?: 'mysql';
 
         try {

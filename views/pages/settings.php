@@ -30,6 +30,7 @@
 
     <div class="container">
         <form action="/settings/save" method="POST">
+            <?php echo CSRF::field(); ?>
 
             <div class="card">
                 <h2>API Configuration</h2>

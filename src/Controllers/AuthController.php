@@ -6,6 +6,7 @@ class AuthController {
     }
 
     public function processLogin() {
+        CSRF::check();
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
 

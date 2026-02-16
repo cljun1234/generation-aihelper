@@ -2,7 +2,12 @@
 session_start();
 
 require_once __DIR__ . '/../src/AltoRouter.php';
+require_once __DIR__ . '/../src/Helpers/Env.php';
+// Load .env if exists
+loadEnv(__DIR__ . '/../.env');
+
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../src/Helpers/CSRF.php';
 
 // Autoload Controllers
 spl_autoload_register(function ($class) {
