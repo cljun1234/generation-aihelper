@@ -18,7 +18,20 @@ class AIService {
      * @param string $apiKey The API key
      * @return array ['success' => bool, 'data' => string|null, 'error' => string|null]
      */
-    public static function generateCompletion($provider, $model, $systemPrompt, $userPrompt, $apiKey) {
+    public static function generateCompletion($provider, $model, $systemPrompt, $userPrompt, $apiKey = null) {
+
+        // Fallback to ENV if apiKey is not provided
+        if (empty($apiKey)) {
+            if ($provider === self::PROVIDER_OPENAI) {
+                $apiKey = getenv('OPENAI_API_KEY');
+            } elseif ($provider === self::PROVIDER_DEEPSEEK) {
+                $apiKey = getenv('DEEPSEEK_API_KEY');
+            }
+        }
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => "API Key missing for provider: $provider"];
+        }
 
         $url = '';
         if ($provider === self::PROVIDER_OPENAI) {
